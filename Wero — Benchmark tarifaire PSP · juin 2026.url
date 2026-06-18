@@ -1,2 +1,642 @@
-[InternetShortcut]
-URL=file:///C:/Users/PH/Downloads/index_1.html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wero — Benchmark tarifaire PSP · juin 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:       #0D0F14;
+    --bg2:      #13161D;
+    --bg3:      #1A1E28;
+    --border:   rgba(255,255,255,0.07);
+    --text:     #E8EAF0;
+    --muted:    #7A8099;
+    --accent:   #F5C842;   /* Wero jaune */
+    --green:    #3ECF8E;
+    --amber:    #F59E42;
+    --blue:     #60A5FA;
+    --gray:     #6B7280;
+    --red:      #F87171;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.75rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--bg2) 0%, var(--bg) 100%);
+  }
+
+  .header-left h1 {
+    font-size: clamp(1.35rem, 3vw, 1.9rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .header-left h1 span { color: var(--accent); }
+  .header-left p {
+    margin-top: .5rem;
+    color: var(--muted);
+    font-size: 13px;
+    max-width: 520px;
+  }
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--muted);
+  }
+  .tag.live { border-color: rgba(62,207,142,.3); color: var(--green); background: rgba(62,207,142,.08); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+  /* ── KPI BAR ── */
+  .kpi-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .kpi {
+    background: var(--bg2);
+    padding: 1.1rem 1.5rem;
+  }
+  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .kpi-val { font-size: 1.35rem; font-weight: 600; color: #fff; font-family: 'JetBrains Mono', monospace; }
+  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .kpi-val .accent { color: var(--accent); }
+
+  /* ── LAYOUT ── */
+  main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+  .legend-label { font-size: 11px; color: var(--muted); margin-right: 4px; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .bg { background: rgba(62,207,142,.12); color: var(--green); border: 1px solid rgba(62,207,142,.2); }
+  .ba { background: rgba(245,158,66,.1); color: var(--amber); border: 1px solid rgba(245,158,66,.2); }
+  .bb { background: rgba(96,165,250,.1); color: var(--blue); border: 1px solid rgba(96,165,250,.2); }
+  .bl { background: rgba(107,114,128,.1); color: var(--gray); border: 1px solid rgba(107,114,128,.2); }
+  .br { background: rgba(248,113,113,.08); color: var(--red); border: 1px solid rgba(248,113,113,.15); }
+  .role-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    background: var(--bg3);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    margin-top: 3px;
+  }
+
+  /* ── TABLE WRAPPER ── */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 860px;
+  }
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  thead th:first-child { width: 195px; }
+  thead th:nth-child(2) { width: 110px; }
+
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover td { background: rgba(255,255,255,.025); }
+
+  td { padding: 10px 14px; vertical-align: top; }
+
+  /* section divider row */
+  .section-row td {
+    background: var(--bg3);
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    padding: 6px 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .psp-name { font-weight: 500; color: #fff; font-size: 13px; }
+  .psp-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .cell-note { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+  .cell-src { margin-top: 5px; }
+  .cell-src a { font-size: 10px; color: var(--blue); text-decoration: none; opacity: .7; }
+  .cell-src a:hover { opacity: 1; }
+
+  .rate-highlight {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── CALLOUT BOXES ── */
+  .callout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 1.75rem; }
+  .callout {
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+  }
+  .callout.warn { border-left: 3px solid var(--amber); }
+  .callout.ok   { border-left: 3px solid var(--green); }
+  .callout.info { border-left: 3px solid var(--blue); }
+  .callout-title { font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+  .callout-text  { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .callout-text strong { color: var(--text); }
+
+  /* ── SOURCES ── */
+  .sources {
+    margin-top: 2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+  }
+  .sources-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .sources-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sources-list a {
+    font-size: 11px;
+    color: var(--blue);
+    text-decoration: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(96,165,250,.08);
+    border: 1px solid rgba(96,165,250,.15);
+    transition: background .15s;
+  }
+  .sources-list a:hover { background: rgba(96,165,250,.15); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 3rem;
+    border-top: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+    color: var(--muted);
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    header { padding: 1.25rem; }
+    main { padding: 1rem; }
+    .header-meta { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Wero — Benchmark tarifaire <span>PSP & acquéreurs</span></h1>
+    <p>Comparatif des tarifs Wero e-commerce appliqués par les acteurs concurrents en France, Belgique et Allemagne. Usage interne Viva.com.</p>
+  </div>
+  <div class="header-meta">
+    <span class="tag live"><span class="dot"></span>Mis à jour juin 2026</span>
+    <span class="tag">🇩🇪 DE · 🇧🇪 BE · 🇫🇷 FR</span>
+    <span class="tag">Usage interne — Viva.com</span>
+  </div>
+</header>
+
+<div class="kpi-bar">
+  <div class="kpi">
+    <div class="kpi-label">Seul tarif Wero publié</div>
+    <div class="kpi-val"><span class="accent">0,77%</span> + 0,07€</div>
+    <div class="kpi-sub">Sparkassen / S-Payment (DE)</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Acquéreurs Wero certifiés EPI</div>
+    <div class="kpi-val">13+ DE · 3+ BE · 1 FR</div>
+    <div class="kpi-sub">Source : communiqué EPI nov. 2025</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Tarifs publiés / Total acteurs</div>
+    <div class="kpi-val"><span class="accent">1</span> / 30+</div>
+    <div class="kpi-sub">Tous les autres : sur devis</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Fourchette marché estimée</div>
+    <div class="kpi-val">0,1 – 0,8%</div>
+    <div class="kpi-sub">Vs cartes : 1,5 – 3%</div>
+  </div>
+</div>
+
+<main>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <span class="legend-label">Légende :</span>
+    <span class="badge bg">✓ Actif + tarif publié</span>
+    <span class="badge ba">Actif — tarif non publié</span>
+    <span class="badge bb">Membre EPI / émetteur</span>
+    <span class="badge bl">En préparation / annoncé</span>
+    <span class="badge br">Hors périmètre</span>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Acteur</th>
+        <th>Rôle Wero</th>
+        <th>🇩🇪 Allemagne</th>
+        <th>🇧🇪 Belgique</th>
+        <th>🇫🇷 France</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- ─ PSP / ACQUÉREURS ─ -->
+      <tr class="section-row"><td colspan="5">PSP / Acquéreurs tiers — distribuent Wero aux marchands et fixent le tarif</td></tr>
+
+      <tr>
+        <td><div class="psp-name">Airwallex</div><div class="psp-sub">Fintech globale, membre EPI principal depuis nov. 2025</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Membre principal EPI depuis nov. 2025. Tarif non publié.</div><div class="cell-src"><a href="https://www.airwallex.com/global/newsroom/airwallex-becomes-a-principal-member-of-epi-to-bring-wero-europes-unified" target="_blank">airwallex.com/newsroom ↗</a></div></td>
+        <td><span class="badge bl">Prévu 2026</span><div class="cell-note">Annoncé FR &amp; BE 2026. Pas de tarif.</div></td>
+        <td><span class="badge bl">Prévu 2026</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Axepta BNP Paribas</div><div class="psp-sub">Filiale acquiring de BNP Paribas — actionnaire EPI</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Axepta acquéreur Wero e-com DE/FR/BE/NL/LU via 2026. Tarif non publié.</div><div class="cell-src"><a href="https://group.bnpparibas/actualite/bnp-paribas-engage-aupres-de-wero-pour-les-solutions-de-paiement-en-e-commerce" target="_blank">group.bnpparibas.com ↗</a></div></td>
+        <td><span class="badge bl">Prévu 2026</span></td>
+        <td><span class="badge bl">Prévu 2026</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Buckaroo</div><div class="psp-sub">PSP NL/BE, fort en Benelux</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Acquéreur Wero DE certifié EPI. Sur Shopify : surcharge 0,35% + frais Buckaroo.</div><div class="cell-src"><a href="https://www.buckaroo.eu/wero" target="_blank">buckaroo.eu/wero ↗</a></div></td>
+        <td><span class="badge bl">En intégration</span><div class="cell-note">Prévu d'abord DE, puis BE/NL.</div></td>
+        <td><span class="badge br">Hors scope</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">CM.com</div><div class="psp-sub">Plateforme comms &amp; paiements NL</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge bl">Non confirmé</span><div class="cell-note">Présent dans l'écosystème EPI mais non listé parmi acquéreurs officiels DE (nov. 2025).</div></td>
+        <td><span class="badge bl">Non confirmé</span></td>
+        <td><span class="badge br">Hors scope</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">HiPay</div><div class="psp-sub">PSP français, partenaire EPI officiel</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Certifié acquéreur EPI, actif DE et BE. Tarif non publié.</div><div class="cell-src"><a href="https://hipay.com/fr/blog/paiements-wero-commercants/" target="_blank">hipay.com/wero ↗</a></div></td>
+        <td><span class="badge ba">Actif mars 2026</span><div class="cell-note">Marchands actifs : Delhaize, Bpost, Lidl, Pairi Daiza. Tarif non publié.</div></td>
+        <td><span class="badge bl">Prévu automne 2026</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Lyra / Lyra Collect</div><div class="psp-sub">PSP français, filiale Banque Populaire</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif / en cours</span><div class="cell-note">Annoncé parmi acquéreurs Wero aux côtés de Worldline, Nexi, PPRO. Tarif non publié.</div><div class="cell-src"><a href="https://laxmi.digital/be/lyra-collect-deploie-wero-la-revolution-des-paiements-europeens-arrive/" target="_blank">laxmi.digital/lyra-wero ↗</a></div></td>
+        <td><span class="badge bl">Prévu</span></td>
+        <td><span class="badge bl">Prévu 2026</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Mollie</div><div class="psp-sub">PSP NL, fort en Benelux &amp; DE</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif nov. 2025</span><div class="cell-note">Wero intégré nativement. Tarif Wero non publié séparément. Cartes EU : 1,80% + 0,25€.</div><div class="cell-src"><a href="https://www.mollie.com/fr/growth/wero-guide-de-paiement" target="_blank">mollie.com/wero ↗</a></div></td>
+        <td><span class="badge ba">Actif (iDEAL|Wero)</span><div class="cell-note">Wero inclus dans contrat unique. Tarif non publié.</div></td>
+        <td><span class="badge bl">Pas encore actif</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Nexi</div><div class="psp-sub">PSP/acquéreur pan-européen (IT/DE/FR)</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Listé parmi acquéreurs Wero DE officiels EPI (nov. 2025). Tarif non publié.</div><div class="cell-src"><a href="https://european-payments-initiative.prezly.com/wero-devoile-sa-solution-e-commerce-et-annonce-ses-premiers-commercants-en-allemagne" target="_blank">EPI prezly ↗</a></div></td>
+        <td><span class="badge bl">Prévu</span></td>
+        <td><span class="badge bl">Prévu 2026</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Nuvei</div><div class="psp-sub">Fintech globale (CA/EU), partenaire Revolut</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Listé acquéreur EPI DE (nov. 2025). Partenariat Revolut/Nuvei pour déploiement e-com. Tarif non publié.</div><div class="cell-src"><a href="https://european-payments-initiative.prezly.com/wero-devoile-sa-solution-e-commerce-et-annonce-ses-premiers-commercants-en-allemagne" target="_blank">EPI prezly ↗</a></div></td>
+        <td><span class="badge bl">Prévu</span></td>
+        <td><span class="badge bl">Prévu</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Pay. (Pay.nl)</div><div class="psp-sub">PSP NL, présent en EU</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Listé acquéreur EPI DE (nov. 2025). Tarif Wero non publié.</div><div class="cell-src"><a href="https://www.pay.nl/en/wero" target="_blank">pay.nl/wero ↗</a></div></td>
+        <td><span class="badge bl">Prévu</span></td>
+        <td><span class="badge bl">Prévu</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Payabl.</div><div class="psp-sub">Fintech EU, membre agréé EPI depuis oct. 2025</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Membre agréé EPI. Acquéreur direct Wero. Tarif non publié.</div><div class="cell-src"><a href="https://www.businesswire.com/news/home/20251002563759/fr" target="_blank">BusinessWire ↗</a></div></td>
+        <td><span class="badge bl">Prévu</span></td>
+        <td><span class="badge bl">Prévu</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">PAYONE</div><div class="psp-sub">JV Worldline × DSV Group — spécialiste DACH</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif nov. 2025</span><div class="cell-note">1er PSP tiers à lancer Wero e-com DE. Abonnement dès 11,90€/mois + frais transaction. Tarif Wero non publié.</div><div class="cell-src"><a href="https://www.payone.com/DE-en/about-us/press/wero-e-commerce-acceptance" target="_blank">payone.com/wero ↗</a></div></td>
+        <td><span class="badge br">DACH seulement</span></td>
+        <td><span class="badge br">DACH seulement</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">PayPlug</div><div class="psp-sub">Filiale BPCE — marché FR</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge br">Hors scope</span></td>
+        <td><span class="badge br">Hors scope</span></td>
+        <td><span class="badge bg">✓ Pilote actif</span><div class="cell-note">1re transaction Wero e-com FR (avr. 2026). <span class="rate-highlight">Tarif Wero non publié.</span> Cartes dès 0,5% + 0,15€.</div><div class="cell-src"><a href="https://www.payplug.com/fr/blog/paiement-wero/" target="_blank">payplug.com/wero ↗</a></div></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">PPRO</div><div class="psp-sub">Infrastructure APM globale, partenaire EPI avr. 2026</div></td>
+        <td><span class="role-tag">Acquéreur / infra</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Listé acquéreur DE (nov. 2025). Partenariat EPI officialisé avr. 2026. Rôle = infra APM pour PSP partenaires. Tarif non publié.</div><div class="cell-src"><a href="https://finyear.com/epi-company-wero-un-partenariat-avec-la-fintech-dorigine-britannique-ppro_a52145.html" target="_blank">finyear.com/PPRO ↗</a></div></td>
+        <td><span class="badge bl">Prévu</span></td>
+        <td><span class="badge bl">Prévu</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">S-Payment / Sparkassen</div><div class="psp-sub">Centre paiements Sparkasse-Finanzgruppe</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td>
+          <span class="badge bg">✓ Tarif publié</span>
+          <div class="cell-note"><span class="rate-highlight">0,77% + min. 0,07€</span><br>Seul tarif Wero publié officiellement. Sans frais additionnels si déjà client E-Payment Plattform.</div>
+          <div class="cell-src"><a href="https://www.sparkasse-saarbruecken.de/fi/home/produkte/bezahlverfahren/kassieren-im-internet/wero.html" target="_blank">sparkasse-saarbruecken.de ↗</a></div>
+        </td>
+        <td><span class="badge br">DE seulement</span></td>
+        <td><span class="badge br">DE seulement</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Stripe</div><div class="psp-sub">PSP global, acquéreur Wero DE actif</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Acquéreur Wero DE. Tarif Wero non listé sur stripe.com/pricing. Cartes EU : 1,5% + 0,25€.</div><div class="cell-src"><a href="https://stripe.com/fr/pricing/local-payment-methods" target="_blank">stripe.com/pricing ↗</a></div></td>
+        <td><span class="badge bl">Prévu 2026</span></td>
+        <td><span class="badge bl">Prévu 2026</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Unzer</div><div class="psp-sub">PSP DE, ex-Heidelpay, acquéreur Wero 2025</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Acquéreur Wero DE (rejoint EPI 2025). Tarif non publié.</div><div class="cell-src"><a href="https://businessofpayments.substack.com/p/business-of-payments-june-2025" target="_blank">Business of Payments ↗</a></div></td>
+        <td><span class="badge br">Non annoncé</span></td>
+        <td><span class="badge br">Non annoncé</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">VR Payment</div><div class="psp-sub">Service paiements coopératives DE (DZ Bank)</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Acquéreur Wero DE certifié EPI, aux côtés des Volksbanken/Raiffeisenbanken. Tarif non publié.</div><div class="cell-src"><a href="https://businessofpayments.substack.com/p/business-of-payments-june-2025" target="_blank">Business of Payments ↗</a></div></td>
+        <td><span class="badge br">DE seulement</span></td>
+        <td><span class="badge br">DE seulement</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Worldline</div><div class="psp-sub">Actionnaire EPI depuis 2020 — pan-européen</div></td>
+        <td><span class="role-tag">Acquéreur</span></td>
+        <td><span class="badge ba">Actif</span><div class="cell-note">Actionnaire EPI. Acquéreur Wero DE. Pricing enterprise sur devis. Tarif non publié.</div><div class="cell-src"><a href="https://worldline.com/fr-fr/home/main-navigation/resources/blogs/2025/qu-est-ce-que-wero" target="_blank">worldline.com/wero ↗</a></div></td>
+        <td><span class="badge ba">Actif mars 2026</span><div class="cell-note">A piloté l'intégration technique BE. Tarif non publié.</div></td>
+        <td><span class="badge bl">Prévu début 2026</span></td>
+      </tr>
+
+      <!-- ─ BANQUES MEMBRES ─ -->
+      <tr class="section-row"><td colspan="5">Banques membres EPI — rôle principal : émission Wero côté consommateur</td></tr>
+
+      <tr>
+        <td><div class="psp-name">ABN AMRO</div><div class="psp-sub">Banque NL, membre EPI / migration iDEAL</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge br">NL → migration iDEAL</span></td>
+        <td><span class="badge br">Hors périmètre BE</span></td>
+        <td><span class="badge br">Hors périmètre FR</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Bancontact Payconiq Company</div><div class="psp-sub">Rebaptisé "Bancontact Company" — distributeur Wero BE</div></td>
+        <td><span class="role-tag">Distributeur BE</span></td>
+        <td><span class="badge br">BE uniquement</span></td>
+        <td><span class="badge ba">Distributeur Wero BE</span><div class="cell-note">Distribue Wero aux marchands Payconiq. <strong>Tarifs gelés jusqu'à fin 2026</strong> (neutralité tarifaire).</div><div class="cell-src"><a href="https://www.bancontactpayconiq.com/fr/nouvelles/bancontact-payconiq-company-ouvre-un-nouveau-chapitre-pour-le-paiement-belge-avec-la-marque-bancontact-pay" target="_blank">bancontactpayconiq.com ↗</a></div></td>
+        <td><span class="badge br">BE uniquement</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Banque Populaire / Caisse d'Épargne</div><div class="psp-sub">Groupe BPCE — membre EPI + PayPlug (filiale)</div></td>
+        <td><span class="role-tag">Émetteur + acquéreur via PayPlug</span></td>
+        <td><span class="badge bl">Via PayPlug</span></td>
+        <td><span class="badge bl">Via PayPlug</span></td>
+        <td><span class="badge ba">Pilote via PayPlug</span><div class="cell-note">BPCE actionnaire EPI. PayPlug = 1er PSP FR actif Wero (avr. 2026).</div><div class="cell-src"><a href="https://www.payplug.com/fr/blog/paiement-wero/" target="_blank">payplug.com/wero ↗</a></div></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">CIC / Crédit Mutuel</div><div class="psp-sub">Groupe Crédit Mutuel Alliance Fédérale — membre fondateur EPI</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge br">Pas de rôle acquéreur DE</span></td>
+        <td><span class="badge br">Hors périmètre</span></td>
+        <td><span class="badge bb">Membre EPI / émetteur</span><div class="cell-note">Rôle acquéreur marchand non annoncé séparément.</div></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Crédit Agricole</div><div class="psp-sub">Banque FR — actionnaire EPI</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge br">Pas de rôle acquéreur DE</span></td>
+        <td><span class="badge br">Hors périmètre</span></td>
+        <td><span class="badge bb">Membre EPI / émetteur</span><div class="cell-note">Rôle = émission Wero clients CA. Pas d'offre acquéreur marchands publiée.</div></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Crédit Mutuel – Arkéa</div><div class="psp-sub">Groupe distinct de CM Alliance — banque FR/BE</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge br">N/A</span></td>
+        <td><span class="badge br">N/A</span></td>
+        <td><span class="badge bb">Émetteur</span><div class="cell-note">Non listé séparément comme acquéreur Wero. Rôle émetteur uniquement.</div></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Deutsche Bank</div><div class="psp-sub">Banque DE — membre EPI + acquéreur</div></td>
+        <td><span class="role-tag">Émetteur + acquéreur DE</span></td>
+        <td><span class="badge ba">Acquéreur Wero DE</span><div class="cell-note">Listé acquéreur officiel EPI DE (nov. 2025) via "Global Hausbank". Tarif non publié.</div><div class="cell-src"><a href="https://european-payments-initiative.prezly.com/wero-devoile-sa-solution-e-commerce-et-annonce-ses-premiers-commercants-en-allemagne" target="_blank">EPI prezly ↗</a></div></td>
+        <td><span class="badge br">Hors périmètre</span></td>
+        <td><span class="badge br">Hors périmètre</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">ING</div><div class="psp-sub">Banque NL/BE/DE — membre EPI</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge bl">Émetteur — prévu 2026</span><div class="cell-note">ING Allemagne annoncé côté émetteur. Pas d'offre acquéreur publiée.</div></td>
+        <td><span class="badge bb">Émetteur actif BE</span></td>
+        <td><span class="badge bl">Prévu</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">La Banque Postale</div><div class="psp-sub">Banque FR — membre fondateur EPI</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge br">N/A</span></td>
+        <td><span class="badge br">N/A</span></td>
+        <td><span class="badge bb">Membre EPI / émetteur</span><div class="cell-note">Rôle émetteur uniquement. Pas d'offre acquéreur publiée.</div></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">LCL</div><div class="psp-sub">Filiale Crédit Agricole — banque FR</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge br">N/A</span></td>
+        <td><span class="badge br">N/A</span></td>
+        <td><span class="badge bb">Émetteur (via CA)</span><div class="cell-note">Filiale Crédit Agricole, membre EPI. Pas d'offre acquéreur distincte.</div></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Rabobank</div><div class="psp-sub">Banque NL — membre EPI / migration iDEAL</div></td>
+        <td><span class="role-tag">Émetteur</span></td>
+        <td><span class="badge br">NL seulement</span></td>
+        <td><span class="badge br">Hors périmètre</span></td>
+        <td><span class="badge br">Hors périmètre</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Raiffeisen Bank International (RBI)</div><div class="psp-sub">Banque AT/EU — membre EPI depuis nov. 2025</div></td>
+        <td><span class="role-tag">Acquéreur / émetteur AT</span></td>
+        <td><span class="badge ba">Acquéreur DE/AT</span><div class="cell-note">Membre EPI depuis nov. 2025. Connecté acquéreur depuis fin 2025. Tarif non publié.</div><div class="cell-src"><a href="https://businessofpayments.substack.com/p/business-of-payments-january-2026" target="_blank">Business of Payments ↗</a></div></td>
+        <td><span class="badge bl">Prévu</span></td>
+        <td><span class="badge bl">Prévu</span></td>
+      </tr>
+
+      <tr>
+        <td><div class="psp-name">Société Générale</div><div class="psp-sub">Banque FR — membre EPI + acquéreur DE</div></td>
+        <td><span class="role-tag">Émetteur + acquéreur DE</span></td>
+        <td><span class="badge ba">Acquéreur Wero DE</span><div class="cell-note">Listé acquéreur officiel EPI DE (nov. 2025). Tarif non publié.</div><div class="cell-src"><a href="https://european-payments-initiative.prezly.com/wero-devoile-sa-solution-e-commerce-et-annonce-ses-premiers-commercants-en-allemagne" target="_blank">EPI prezly ↗</a></div></td>
+        <td><span class="badge br">N/A</span></td>
+        <td><span class="badge bb">Membre EPI / émetteur</span><div class="cell-note">Rôle acquéreur FR non annoncé séparément.</div></td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <!-- CALLOUTS -->
+  <div class="callout-grid">
+    <div class="callout warn">
+      <div class="callout-title">Pourquoi quasi personne ne publie son tarif Wero</div>
+      <div class="callout-text">EPI fixe les règles du schéma et le plafond (<em>cap</em>), mais <strong>chaque acquéreur/PSP définit librement son pricing marchand</strong>. Les acteurs en phase de rampe (Stripe, Mollie, Worldline, Axepta…) négocient actuellement au cas par cas avec les gros marchands avant de publier des grilles. S-Payment / Sparkassen est la seule exception car ils disposent d'un réseau bancaire captif avec une offre packagée standardisée.</div>
+    </div>
+    <div class="callout ok">
+      <div class="callout-title">Point de vigilance — France</div>
+      <div class="callout-text">Sur les 30+ acteurs listés, <strong>seul PayPlug est actif en France à ce jour (pilote avr. 2026)</strong>. Axepta BNP Paribas, Worldline, HiPay, Lyra et d'autres préparent leur lancement FR. <strong>Fenêtre de 3 à 6 mois pour se positionner</strong> avant que la concurrence ne sature l'offre.</div>
+    </div>
+    <div class="callout info">
+      <div class="callout-title">Référence pricing — Benchmark</div>
+      <div class="callout-text">Le seul tarif connu : <strong>0,77% + min. 0,07€</strong> (Sparkassen DE). EPI s'est engagé à rester "inférieur aux cartes" (1,5–3%). Fourchette de marché estimée : <strong>0,1–0,8%</strong>. Une cible autour de <strong>0,5–0,65%</strong> avec cap serait compétitive et différenciante.</div>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="sources">
+    <div class="sources-title">Sources</div>
+    <div class="sources-list">
+      <a href="https://european-payments-initiative.prezly.com/wero-devoile-sa-solution-e-commerce-et-annonce-ses-premiers-commercants-en-allemagne" target="_blank">EPI — acquéreurs DE nov. 2025</a>
+      <a href="https://www.airwallex.com/global/newsroom/airwallex-becomes-a-principal-member-of-epi-to-bring-wero-europes-unified" target="_blank">Airwallex / EPI</a>
+      <a href="https://group.bnpparibas/actualite/bnp-paribas-engage-aupres-de-wero-pour-les-solutions-de-paiement-en-e-commerce" target="_blank">BNP Paribas / Axepta</a>
+      <a href="https://www.businesswire.com/news/home/20251002563759/fr" target="_blank">Payabl. / EPI</a>
+      <a href="https://www.bancontactpayconiq.com/fr/nouvelles/bancontact-payconiq-company-ouvre-un-nouveau-chapitre-pour-le-paiement-belge-avec-la-marque-bancontact-pay" target="_blank">Bancontact Payconiq Company</a>
+      <a href="https://www.sparkasse-saarbruecken.de/fi/home/produkte/bezahlverfahren/kassieren-im-internet/wero.html" target="_blank">Sparkasse — tarif officiel</a>
+      <a href="https://www.buckaroo.eu/wero" target="_blank">Buckaroo / Wero</a>
+      <a href="https://www.pay.nl/en/wero" target="_blank">Pay.nl / Wero</a>
+      <a href="https://hipay.com/fr/blog/paiements-wero-commercants/" target="_blank">HiPay / Wero</a>
+      <a href="https://www.payplug.com/fr/blog/paiement-wero/" target="_blank">PayPlug / Wero</a>
+      <a href="https://laxmi.digital/be/lyra-collect-deploie-wero-la-revolution-des-paiements-europeens-arrive/" target="_blank">Lyra Collect / Wero</a>
+      <a href="https://finyear.com/epi-company-wero-un-partenariat-avec-la-fintech-dorigine-britannique-ppro_a52145.html" target="_blank">PPRO / EPI</a>
+      <a href="https://businessofpayments.substack.com/p/business-of-payments-june-2025" target="_blank">Business of Payments — juin 2025</a>
+      <a href="https://businessofpayments.substack.com/p/business-of-payments-january-2026" target="_blank">Business of Payments — janv. 2026</a>
+      <a href="https://jeremylight.substack.com/p/the-price-you-pay" target="_blank">Jeremy Light / Agenda: Payments — avr. 2026</a>
+      <a href="https://www.mollie.com/fr/growth/wero-guide-de-paiement" target="_blank">Mollie / Guide Wero</a>
+      <a href="https://www.payone.com/DE-en/about-us/press/wero-e-commerce-acceptance" target="_blank">PAYONE / Wero</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>Viva.com — Key Accounts &amp; Local Partnerships · Usage interne</span>
+  <span>Données vérifiées juin 2026 — à mettre à jour au fur et à mesure des annonces EPI</span>
+</footer>
+
+</body>
+</html>
